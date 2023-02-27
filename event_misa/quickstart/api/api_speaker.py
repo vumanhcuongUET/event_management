@@ -22,3 +22,12 @@ class getSpeakerByID(APIView):
         finally:
             cursor.close()
         return Response(result_set, status=status.HTTP_200_OK)
+
+class deleteSpeakerByID(APIView):
+    def delete(self, request, id):
+        cursor = connection.cursor()
+        try:
+            cursor.execute("EXEC [dbo].[Proc_DeleteSpeakerByID] @SpeakerID=" + "'"+ str(id)+"'")
+        finally:
+            cursor.close()
+        return Response(status=status.HTTP_200_OK)
