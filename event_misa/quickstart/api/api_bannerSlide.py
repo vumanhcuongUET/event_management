@@ -14,9 +14,12 @@ class bannerSlideList(APIView):
         try:
             cursor.execute('EXEC [dbo].[Proc_GetListBannerSLide]')
             result_set = cursor.fetchall()
+            return Response(result_set, status=status.HTTP_200_OK)
+        except:
+            return Response(status = status.HTTP_400_BAD_REQUEST)
         finally:
             cursor.close()
-        return Response(result_set, status=status.HTTP_200_OK)
+        # return Response(result_set, status=status.HTTP_200_OK)
 class deleteBannerSlideByID(APIView):
     def delete(self, request, id):
         cursor = connection.cursor()

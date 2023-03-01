@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'quickstart',
     'rest_framework',
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
@@ -45,13 +46,22 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'event_misa.urls'
-
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_HEADERS = "access-control-allow-origin"
+CORS_ORIGIN_WHITELIST = [
+    'http://google.com',
+    'http://hostname.example.com',
+    'http://localhost:3000',
+    'http://127.0.0.1:9000'
+]
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -80,8 +90,7 @@ DATABASES = {
         'NAME':     'event_management',
         'USER':     'sa',
         'PASSWORD': '12345678@Abc',
-        'HOST':     'localhost',
-        'PORT':     '1435', 
+        'HOST':     'hmnam\SQL2022',
         "OPTIONS": {"driver": "ODBC Driver 17 for SQL Server", 
         },
     }

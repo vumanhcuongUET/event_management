@@ -28,4 +28,5 @@ urlpatterns = [
     path('deleteSpeakerByID/<uuid:id>/', deleteSpeakerByID.as_view()),
     path('InsertBannerSlide/', InsertBannerSlide.as_view()),
     path('InsertEvent/', InsertEvent.as_view()),
+    path('GetAllEvent/',getAllEvent.as_view()),
 ]
