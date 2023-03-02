@@ -15,36 +15,72 @@ def listToString(s):
  
     # return string
     return str1
+def query_db(query, args=(), one=False):
+    cur = connection.cursor()
+    cur.execute(query, args)
+    r = [dict((cur.description[i][0], value) \
+               for i, value in enumerate(row)) for row in cur.fetchall()]
+    cur.connection.close()
+    return (r[0] if r else None) if one else r
 class getAllEvent(APIView):
-    def get(self, request, format=None):
-        cursor = connection.cursor()
+    def get(self, request, one=False):
         try:
+            cursor = connection.cursor()
             cursor.execute('EXEC [dbo].[Proc_GetAllEvent]')
-            result_set = cursor.fetchall()
-            return Response(result_set, status=status.HTTP_200_OK)
+            r = [dict((cursor.description[i][0], value) \
+                for i, value in enumerate(row)) for row in cursor.fetchall()]
+            return Response({
+                "data": json.dumps(r[0] if r else None) if one else r
+                },
+                status=status.HTTP_200_OK
+            )
         except:
-            return Response(status = status.HTTP_400_BAD_REQUEST)
+            return Response({
+                "message": "Lỗi"
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
         finally:
             cursor.close()
 class getEventByID(APIView):
-    def get(self, request, id):
+    def get(self, request, id, one=False):
         cursor = connection.cursor()
         try:
             cursor.execute('EXEC [dbo].[Proc_GetEventByID] @EventID=' + str(id))
-            print(id)
-            result_set = cursor.fetchall()
+            r = [dict((cursor.description[i][0], value) \
+                for i, value in enumerate(row)) for row in cursor.fetchall()]
+            return Response({
+                "data": json.dumps(r[0] if r else None) if one else r
+                },
+                status=status.HTTP_200_OK
+            )
+        except:
+            return Response({
+                "message": "Lỗi"
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
         finally:
             cursor.close()
-        return Response(result_set, status=status.HTTP_200_OK)
 
 class deleteEventByID(APIView):
     def delete(self, request, id):
         cursor = connection.cursor()
         try:
             cursor.execute('EXEC [dbo].[Proc_DeleteEventByID] @EventID=' + str(id))
+            return Response({
+                "message": "Xóa thành công"
+                },
+                status=status.HTTP_200_OK
+            )
+        except:
+            return Response({
+                "message": "Lỗi"
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
         finally:
             cursor.close()
-        return Response(status=status.HTTP_200_OK)
 
 class InsertEvent(APIView):
     def post(self, request, format=None):
@@ -82,6 +118,17 @@ class InsertEvent(APIView):
         ModifiedDate = request.data['ModifiedDate']
         try:
             cursor.execute("EXEC [dbo].[Proc_InsertEvent] @EventName=" + "'"+ str(EventName)+"'" + ", @Banner=" + "'"+ str(Banner)+"'" + ", @BannerMobile=" + "'"+ str(BannerMobile)+"'" + ", @Avatar=" + "'"+ str(Avatar)+"'" + ", @Topic=" + "'"+ str(Topic)+"'" + ", @EventType=" + "'"+ str(EventType)+"'" + ", @StartDate=" + "'"+ str(StartDate)+"'" + ", @EndDate=" + "'"+ str(EndDate)+"'" + ", @Cost=" + "'"+ str(Cost)+"'" + ", @Summary=" + "'"+ str(Summary)+"'" + ", @Content=" + "'"+ str(Content)+"'" + ", @BenefitContent=" + "'"+ listToString(BenefitContent)+ "'" + ", @OrganizationalUnit=" + "'"+ str(OrganizationalUnit)+"'" + ", @Address=" + "'"+ str(Address)+"'" + ", @Slot=" + "'"+ str(Slot)+"'" + ", @TargetCustomer=" + "'"+ str(TargetCustomer)+"'" + ", @Schedule=" + "'"+ str(Schedule)+"'" + ", @aiMarketingCode=" + "'"+ str(aiMarketingCode)+"'" + ", @ZaloLink=" + "'"+ str(ZaloLink)+"'" + ", @FanpageLink=" + "'"+ str(FanpageLink)+"'" + ", @VideoLink=" + "'"+ str(VideoLink)+"'" + ", @DocumentLink=" + "'"+ str(DocumentLink)+"'" + ", @Speaker=" + "'"+ listToString(Speaker)+"'" + ", @IsHideBanner=" + "'"+ str(IsHideBanner)+"'" + ", @IsHideContent=" + "'"+ str(IsHideContent)+"'" + ", @IsHideSchedule=" + "'"+ str(IsHideSchedule)+"'" + ", @Inactive=" + "'"+ str(Inactive)+"'" + ", @CreatedBy=" + "'"+ str(CreatedBy)+"'" + ", @CreatedDate=" + "'"+ str(CreatedDate)+"'" + ", @ModifiedBy=" + "'"+ str(ModifiedBy)+"'" + ", @ModifiedDate=" + "'"+ str(ModifiedDate)+"'")
+            return Response({
+                "message": "Thêm thành công",
+                "data": request.data
+                },
+                status=status.HTTP_201_CREATED
+            )
+        except:
+            return Response({
+                "message": "Lỗi"
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
         finally:
             cursor.close()
-        return Response(status=status.HTTP_200_OK)

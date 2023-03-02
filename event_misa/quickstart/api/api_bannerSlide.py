@@ -13,21 +13,36 @@ class bannerSlideList(APIView):
         cursor = connection.cursor()
         try:
             cursor.execute('EXEC [dbo].[Proc_GetListBannerSLide]')
-            result_set = cursor.fetchall()
-            return Response(result_set, status=status.HTTP_200_OK)
+            r = [dict((cursor.description[i][0], value) \
+                for i, value in enumerate(row)) for row in cursor.fetchall()]
+            return Response({
+                "data": json.dumps(r[0] if r else None) if one else r
+                },
+                status=status.HTTP_200_OK
+            )
         except:
             return Response(status = status.HTTP_400_BAD_REQUEST)
         finally:
             cursor.close()
-        # return Response(result_set, status=status.HTTP_200_OK)
 class deleteBannerSlideByID(APIView):
     def delete(self, request, id):
         cursor = connection.cursor()
         try:
             cursor.execute('EXEC [dbo].[Proc_DeleteBannerSlideByID] @BannerID=' + str(id))
+            return Response({
+                "message": "Xóa thành công",
+                "id":id
+                },
+                status=status.HTTP_200_OK
+            )
+        except:
+            return Response({
+                "message": "Lỗi"
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
         finally:
             cursor.close()
-        return Response(status=status.HTTP_200_OK)
 
 class InsertBannerSlide(APIView):
     def post(self, request, format=None):
@@ -43,6 +58,17 @@ class InsertBannerSlide(APIView):
         ModifiedDate = request.data['ModifiedDate']
         try:
             cursor.execute("EXEC [dbo].[Proc_InsertBannerSlide] @BannerTitle=" + "'"+ str(bannerTitle)+"'" + ", @BannerUrl=" + "'"+ str(bannerUrl)+"'" + ", @LinkTo=" + "'"+ str(linkTo)+"'" + ", @SortOrder=" + "'"+ str(sortOrder)+"'" + ", @Inactive=" + "'"+ str(Inactive)+"'" + ", @CreatedBy=" + "'"+ str(CreatedBy)+"'" + ", @CreatedDate=" + "'"+ str(CreatedDate)+"'" + ", @ModifiedBy=" + "'"+ str(ModifiedBy)+"'" + ", @ModifiedDate=" + "'"+ str(ModifiedDate)+"'")
+            return Response({
+                "message": "Thêm thành công",
+                "data": request.data
+                },
+                status=status.HTTP_201_CREATED
+            )
+        except:
+            return Response({
+                "message": "Lỗi"
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
         finally:
             cursor.close()
-        return Response(status=status.HTTP_200_OK)
