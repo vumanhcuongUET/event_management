@@ -9,7 +9,7 @@ class bannerSlideList(APIView):
     List all bannerSlides, or create a new bannerSlide.
     """
 
-    def get(self, request, format=None):
+    def get(self, request, format=None, one=False):
         cursor = connection.cursor()
         try:
             cursor.execute('EXEC [dbo].[Proc_GetListBannerSLide]')
