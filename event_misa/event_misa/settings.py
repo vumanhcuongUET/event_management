@@ -90,7 +90,8 @@ DATABASES = {
         'NAME':     'event_management',
         'USER':     'sa',
         'PASSWORD': '12345678@Abc',
-        'HOST':     'hmnam\SQL2022',
+        'HOST':     'localhost',
+        'PORT':     '1435',
         "OPTIONS": {"driver": "ODBC Driver 17 for SQL Server", 
         },
     }
