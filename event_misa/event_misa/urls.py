@@ -34,9 +34,9 @@ urlpatterns = [
     path('InsertEvent/', InsertEvent.as_view()),
     path('InsertSpeaker/', InsertSpeaker.as_view()),
     path('InsertUser/', insertUser.as_view()),
-    path('updateBannerSlide/', updateBannerSlide.as_view()),
-    path('UpdateSpeaker/', UpdateSpeaker.as_view()),
-    path('UpdateEvent/', UpdateEvent.as_view()),
-    path('updateLeadScoringByEmail/', updateLeadScoringByEmail.as_view()),
+    path('updateBannerSlide/<int:id>', updateBannerSlide.as_view()),
+    path('UpdateSpeaker/<int:id>', UpdateSpeaker.as_view()),
+    path('UpdateEvent/<int:id>', UpdateEvent.as_view()),
+    path('updateLeadScoringByEmail/<str:email>', updateLeadScoringByEmail.as_view()),
     path('synchronizedLeadScoring/<str:email>', synchronizedLeadScoring.as_view()),
 ]
