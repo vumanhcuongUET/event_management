@@ -20,7 +20,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('GetAllEvent/',getAllEvent.as_view()),
     path('getBannerList/', bannerSlideList.as_view()),
-    path('getEventByID/<int:id>/', getEventByID.as_view()), 
+    path('getEventByID/<int:eventID>/', getEventByID.as_view()), 
     path('getSpeakerList/', getSpeakerList.as_view()),
     path('getSpeakerByID/<uuid:id>/', getSpeakerByID.as_view()),
     path('getUserByEventID/<int:id>/', getUserByEventID.as_view()),

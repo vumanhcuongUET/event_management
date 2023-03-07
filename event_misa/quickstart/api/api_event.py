@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.db import connection
 import json
+from enum import Enum
 def listToString(s):
      
     # initialize an empty string
@@ -47,10 +48,10 @@ class getAllEvent(APIView):
         finally:
             cursor.close()
 class getEventByID(APIView):
-    def get(self, request, id, one=False):
+    def get(self, request, eventID, one=False):
         cursor = connection.cursor()
         try:
-            cursor.execute('EXEC [dbo].[Proc_GetEventByID] @EventID=' + str(id))
+            cursor.execute('EXEC [dbo].[Proc_GetEventByID] @EventID=' + str(eventID))
             r = [dict((cursor.description[i][0], value) \
                 for i, value in enumerate(row)) for row in cursor.fetchall()]
             return Response({
@@ -139,8 +140,9 @@ class InsertEvent(APIView):
             cursor.close()
 
 class UpdateEvent(APIView):
-    def put(self,request, id):
+    def put(self,request):
         cursor = connection.cursor()
+        EventID = request.data['EventID']
         EventName = request.data['EventName']
         Banner = request.data['Banner']
         BannerMobile = request.data['BannerMobile']
@@ -173,12 +175,12 @@ class UpdateEvent(APIView):
         CreatedDate = request.data['CreatedDate']
         ModifiedDate = request.data['ModifiedDate']
         try:
-            cursor.execute("EXEC [dbo].[Proc_UpdateEvent] @EventID=" + str(id) + ", @EventName=" + "'"+ str(EventName)+"'" + ", @Banner=" + "'"+ str(Banner)+"'" + ", @BannerMobile=" + "'"+ str(BannerMobile)+"'" + ", @Avatar=" + "'"+ str(Avatar)+"'" + ", @Topic=" + "'"+ str(Topic)+"'" + ", @EventType=" + "'"+ str(EventType)+"'" + ", @StartDate=" + "'"+ str(StartDate)+"'" + ", @EndDate=" + "'"+ str(EndDate)+"'" + ", @Cost=" + "'"+ str(Cost)+"'" + ", @Summary=" + "'"+ str(Summary)+"'" + ", @Content=" + "'"+ str(Content)+"'" + ", @BenefitContent=" + "'"+ listToString(BenefitContent)+ "'" + ", @OrganizationalUnit=" + "'"+ str(OrganizationalUnit)+"'" + ", @Address=" + "'"+ str(Address)+"'" + ", @Slot=" + "'"+ str(Slot)+"'" + ", @TargetCustomer=" + "'"+ str(TargetCustomer)+"'" + ", @Schedule=" + "'"+ str(Schedule)+"'" + ", @aiMarketingCode=" + "'"+ str(aiMarketingCode)+"'" + ", @ZaloLink=" + "'"+ str(ZaloLink)+"'" + ", @FanpageLink=" + "'"+ str(FanpageLink)+"'" + ", @VideoLink=" + "'"+ str(VideoLink)+"'" + ", @DocumentLink=" + "'"+ str(DocumentLink)+"'" + ", @Speaker=" + "'"+ listToString(Speaker)+"'" + ", @IsHideBanner=" + "'"+ str(IsHideBanner)+"'" + ", @IsHideContent=" + "'"+ str(IsHideContent)+"'" + ", @IsHideSchedule=" + "'"+ str(IsHideSchedule)+"'" + ", @Inactive=" + "'"+ str(Inactive)+"'" + ", @CreatedBy=" + "'"+ str(CreatedBy)+"'" + ", @CreatedDate=" + "'"+ str(CreatedDate)+"'" + ", @ModifiedBy=" + "'"+ str(ModifiedBy)+"'" + ", @ModifiedDate=" + "'"+ str(ModifiedDate)+"'")
+            cursor.execute("EXEC [dbo].[Proc_UpdateEvent] @EventID=" + str(EventID) + ", @EventName=" + "'"+ str(EventName)+"'" + ", @Banner=" + "'"+ str(Banner)+"'" + ", @BannerMobile=" + "'"+ str(BannerMobile)+"'" + ", @Avatar=" + "'"+ str(Avatar)+"'" + ", @Topic=" + "'"+ str(Topic)+"'" + ", @EventType=" + "'"+ str(EventType)+"'" + ", @StartDate=" + "'"+ str(StartDate)+"'" + ", @EndDate=" + "'"+ str(EndDate)+"'" + ", @Cost=" + "'"+ str(Cost)+"'" + ", @Summary=" + "'"+ str(Summary)+"'" + ", @Content=" + "'"+ str(Content)+"'" + ", @BenefitContent=" + "'"+ listToString(BenefitContent)+ "'" + ", @OrganizationalUnit=" + "'"+ str(OrganizationalUnit)+"'" + ", @Address=" + "'"+ str(Address)+"'" + ", @Slot=" + "'"+ str(Slot)+"'" + ", @TargetCustomer=" + "'"+ str(TargetCustomer)+"'" + ", @Schedule=" + "'"+ str(Schedule)+"'" + ", @aiMarketingCode=" + "'"+ str(aiMarketingCode)+"'" + ", @ZaloLink=" + "'"+ str(ZaloLink)+"'" + ", @FanpageLink=" + "'"+ str(FanpageLink)+"'" + ", @VideoLink=" + "'"+ str(VideoLink)+"'" + ", @DocumentLink=" + "'"+ str(DocumentLink)+"'" + ", @Speaker=" + "'"+ listToString(Speaker)+"'" + ", @IsHideBanner=" + "'"+ str(IsHideBanner)+"'" + ", @IsHideContent=" + "'"+ str(IsHideContent)+"'" + ", @IsHideSchedule=" + "'"+ str(IsHideSchedule)+"'" + ", @Inactive=" + "'"+ str(Inactive)+"'" + ", @CreatedBy=" + "'"+ str(CreatedBy)+"'" + ", @CreatedDate=" + "'"+ str(CreatedDate)+"'" + ", @ModifiedBy=" + "'"+ str(ModifiedBy)+"'" + ", @ModifiedDate=" + "'"+ str(ModifiedDate)+"'")
             return Response({
                 "message": "Sửa thành công",
                 "data": request.data
                 },
-                status=status.HTTP_201_CREATED
+                status=status.HTTP_200_OK
             )
         except:
             return Response({
