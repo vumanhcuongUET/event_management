@@ -16,17 +16,17 @@ def listToString(s):
  
     # return string
     return str1
-# class filter(Enum):
-#     Like:1
-#     EqualString:2
-#     EqualNumber:3
-#     Less:4
-#     LessEqual:5
-#     Greater:6
-#     GreaterEqual:7
-#     StartWith:8
-#     EndWith:9
-#     NotLike:10
+class filter(Enum):
+    Like:1
+    EqualString:2
+    EqualNumber:3
+    Less:4
+    LessEqual:5
+    Greater:6
+    GreaterEqual:7
+    StartWith:8
+    EndWith:9
+    NotLike:10
 class getAllEvent(APIView):
     def get(self, request, one=False):
         try:
